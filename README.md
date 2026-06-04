@@ -1,11 +1,10 @@
-# Proyecto Rocío García — PWA de Tareas
+# Proyecto — PWA de Tareas
 
 Aplicación web progresiva desarrollada con **React + TypeScript + Vite**, pensada para gestionar tareas con soporte **offline**, almacenamiento local en **IndexedDB**, caché mediante **Service Worker** y base preparada para sincronización con una API local y notificaciones push con Firebase Cloud Messaging.
 
 ## Descripción
 
 Esta PWA permite registrar, visualizar y completar tareas desde el navegador. La aplicación puede instalarse como app en dispositivos compatibles y seguir funcionando aun cuando no haya conexión a internet.
-
 Cuando el usuario está offline, las tareas se guardan localmente y pueden enviarse a una cola de sincronización para procesarse cuando vuelva la conexión.
 
 ## Características principales
@@ -136,51 +135,11 @@ El proyecto incluye un servidor básico con Express para recibir entradas sincro
 ```bash
 node server.js
 ```
-
 La API local se ejecuta en:
 
 ```txt
 http://localhost:4000
 ```
-
-Endpoints disponibles:
-
-```txt
-POST /api/entries
-POST /api/push/register
-```
-
-## Scripts disponibles
-
-```bash
-npm run dev
-```
-
-Ejecuta el proyecto en modo desarrollo.
-
-```bash
-npm run build
-```
-
-Compila TypeScript y genera la versión de producción con Vite.
-
-```bash
-npm run preview
-```
-
-Sirve localmente la versión compilada.
-
-```bash
-npm run lint
-```
-
-Ejecuta ESLint para revisar el código.
-
-```bash
-npm run build:pwa
-```
-
-Compila el proyecto y genera el Service Worker con Workbox.
 
 ## Funcionamiento offline
 
@@ -189,9 +148,7 @@ La aplicación utiliza un Service Worker ubicado en:
 ```txt
 public/sw.js
 ```
-
 Este archivo maneja:
-
 - Caché del App Shell.
 - Página offline.
 - Estrategia network-first para navegación.
@@ -202,141 +159,6 @@ Este archivo maneja:
 
 Cuando no hay conexión, la aplicación conserva datos localmente y puede mostrar la página `offline.html` cuando sea necesario.
 
-## IndexedDB
-
-El archivo principal de base de datos local está en:
-
-```txt
-src/db.ts
-```
-
-La base local se llama:
-
-```txt
-TasksDB
-```
-
-Contiene dos almacenes principales:
-
-```txt
-entries
-outbox
-```
-
-`entries` guarda las tareas o entradas locales.
-
-`outbox` guarda datos pendientes de sincronización cuando la aplicación no tiene conexión.
-
-## PWA
-
-La configuración principal de la PWA está en:
-
-```txt
-public/manifest.json
-```
-
-Incluye:
-
-- Nombre de la aplicación.
-- Nombre corto.
-- URL de inicio.
-- Modo standalone.
-- Color de tema.
-- Color de fondo.
-- Íconos de 192x192 y 512x512.
-
-Para probar correctamente la instalación como PWA, primero genera la versión de producción:
-
-```bash
-npm run build
-```
-
-Después ejecútala con:
-
-```bash
-npm run preview
-```
-
-## Notificaciones push
-
-El proyecto contiene una integración base con Firebase Cloud Messaging en:
-
-```txt
-src/firebase.ts
-src/push-fcm.ts
-public/firebase-messaging-sw.js
-```
-
-Para habilitar notificaciones push necesitas:
-
-1. Crear un proyecto en Firebase.
-2. Activar Cloud Messaging.
-3. Generar una Web Push certificate key.
-4. Agregar la clave pública VAPID en `.env`.
-5. Solicitar permiso de notificaciones desde la app.
-6. Registrar el token en tu backend.
-
-## Revisión importante del código actual
-
-Antes de entregar o desplegar el proyecto, conviene revisar estos puntos:
-
-1. En `src/App.tsx` se importan funciones llamadas:
-
-```ts
-saveTask, getAllTasks, queueToOutbox
-```
-
-pero en `src/db.ts` actualmente existen funciones llamadas:
-
-```ts
-saveLocalEntry, listLocalEntries, queueOutbox
-```
-
-Por lo tanto, debes unificar los nombres para evitar errores de compilación.
-
-2. En `src/App.tsx` se importa:
-
-```ts
-import { askNotify, subscribePush } from "./push";
-```
-
-pero el archivo existente se llama:
-
-```txt
-src/push-fcm.ts
-```
-
-Debes crear `src/push.ts`, renombrar el archivo o cambiar el import según la función que realmente vayas a usar.
-
-3. El tipo `Task` usado en `App.tsx` contiene propiedades como:
-
-```ts
-completed
-synced
-dueDate
-```
-
-pero el tipo declarado en `db.ts` todavía no las incluye. Es recomendable actualizar la interfaz para que coincida con el uso real de la app.
-
-## Posible corrección rápida para `Task`
-
-Puedes ajustar el tipo en `src/db.ts` así:
-
-```ts
-export type Task = {
-  id?: number;
-  title: string;
-  description?: string;
-  completed: boolean;
-  priority?: "Baja" | "Media" | "Alta";
-  dueDate?: string;
-  synced?: boolean;
-  createdAt?: number;
-};
-```
-
-También puedes renombrar las funciones de `db.ts` o cambiar los imports en `App.tsx`.
-
 ## Build para producción
 
 Para generar la versión final:
@@ -344,34 +166,6 @@ Para generar la versión final:
 ```bash
 npm run build
 ```
-
-Los archivos se generarán en:
-
-```txt
-dist/
-```
-
-Para previsualizar el build:
-
-```bash
-npm run preview
-```
-
-## Despliegue
-
-Puedes desplegar esta PWA en plataformas como:
-
-- Vercel
-- Netlify
-- Firebase Hosting
-- GitHub Pages
-- Render
-
-Para producción, asegúrate de configurar correctamente las variables de entorno en la plataforma donde publiques el proyecto.
-
-## Autor
-
-Proyecto desarrollado para **Rocío García**.
 
 ## Licencia
 
