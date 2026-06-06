@@ -82,4 +82,4 @@ npm run build
 
 ## Licencia
 
-Proyecto desarrollado con fines académicos y de portafolio.
+Proyecto desarrollado con fines de aprendizaje.
