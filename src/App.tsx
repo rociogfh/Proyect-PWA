@@ -1,28 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import "./App.css";
-
-import {
-  saveTask,
-  getAllTasks,
-  deleteTask,
-  queueToOutbox,
-  getOutbox,
-  deleteOutbox,
-} from "./db";
-
+import { saveTask, getAllTasks, deleteTask, queueToOutbox, getOutbox,deleteOutbox } from "./db";
+import { collection, addDoc, serverTimestamp, doc, deleteDoc, updateDoc } from "firebase/firestore";
+import { firestoreDb } from "./firebase";
 import type { Task } from "./db";
 import { askNotify, subscribePush } from "./push";
-
-import {
-  collection,
-  addDoc,
-  serverTimestamp,
-  doc,
-  deleteDoc,
-  updateDoc,
-} from "firebase/firestore";
-
-import { firestoreDb } from "./firebase";
 
 export default function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
